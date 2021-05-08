@@ -8,9 +8,9 @@ const Home = () => {
   const auth = useAuth();
   return (
     <div className={styles.container}>
-      <Head>
+  
         <Heading>Fast Feedback</Heading>
-      </Head>
+   
 
       <main>
    
