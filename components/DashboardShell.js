@@ -1,5 +1,6 @@
 import React from "react";
 import NextLink from 'next/link';
+import AddSiteModal from '@/components/AddSiteModal'
 import {
   Box,
   Breadcrumb,
@@ -46,14 +47,10 @@ const DashboardShell = ({ children }) => {
             </NextLink>
           </Flex>
           <Flex justifyContent="center" alignItems="center">
-            {/* <NextLink href="/account" passHref>
-              <Link> */}
               <Button href="/"  as="a" variant="ghost" mr={2} onClick={() => signout()}>
               Log Out
             </Button>
-                <Avatar size="sm" src={user.photoUrl} />
-              {/* </Link>
-            </NextLink> */}
+                <Avatar size="sm" src={user?.photoUrl} />
           </Flex>
         </Flex>
       </Flex>
@@ -65,18 +62,9 @@ const DashboardShell = ({ children }) => {
         </Breadcrumb>
         <Flex justifyContent="space-between">
           <Heading mb={8}>My Sites</Heading>
-          <Button
-            backgroundColor="gray.900"
-            color="white"
-            fontWeight="medium"
-            _hover={{ bg: 'gray.700' }}
-            _active={{
-              bg: 'gray.800',
-              transform: 'scale(0.95)'
-            }}
-          >
-            + Add Site
-          </Button>
+        <AddSiteModal>
+          + Add Site
+        </AddSiteModal>
         </Flex>
         {children}
       </Flex>

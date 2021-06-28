@@ -12,24 +12,56 @@ import {
   useDisclosure,
   Button,
 } from "@chakra-ui/react";
-
+import { useToast } from "@chakra-ui/react";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { createSite } from "@/lib/db";
+import { useAuth } from "@/lib/auth";
+import useSWR, { mutate } from 'swr';
+import fetcher from "@/utils/fetcher";
+// const { data } = useSWR("/api/sites", fetcher); 
 
-const AddSiteModal = () => {
+const AddSiteModal = ({ children }) => {
   const initialRef = React.useRef();
+  const toast = useToast();
+  const auth = useAuth();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { register, handleSubmit } = useForm();
-  const onCreateSite = (values) => {
-    createSite(values);
+  const onCreateSite = ({ name, url }) => {
+    createSite({
+      authorId: auth.user.uid,
+      createdAt: new Date().toISOString(),
+      name,
+      url,
+    });
+    toast({
+      title: "Success!",
+      description: "We've added your site",
+      status: "success",
+      duration: 5000,
+      isClosable: true,
+    });
+    mutate("/api/sites");
     onClose();
   };
 
   return (
     <>
-      <Button fontWeight="medium" maxW="200px" onClick={onOpen}>
+      <Button fontWeight="medium" maxW="200px">
         Add Your First Site
+      </Button>
+      <Button
+        onClick={onOpen}
+        backgroundColor="gray.900"
+        color="white"
+        fontWeight="medium"
+        _hover={{ bg: "gray.700" }}
+        _active={{
+          bg: "gray.800",
+          transform: "scale(0.95)",
+        }}
+      >
+        {children}
       </Button>
       <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
@@ -52,7 +84,7 @@ const AddSiteModal = () => {
               <Input
                 ref={initialRef}
                 placeholder="url"
-                {...register("site", {
+                {...register("url", {
                   required: true,
                 })}
               />
