@@ -6,11 +6,10 @@ import fetcher from "@/utils/fetcher";
 import useSWR from "swr";
 import { useAuth } from "@/lib/auth";
 
-
 const Dashboard = () => {
-  const auth = useAuth();
-  const {data} = useSWR('/api/sites', fetcher)
-
+  const { user } = useAuth();
+  const { data } = useSWR(user ? ['/api/sites', user.token] : null, fetcher);
+  debugger;
   if (!data) {
     return (
       <DashboardShell>
@@ -18,12 +17,12 @@ const Dashboard = () => {
       </DashboardShell>
     );
   }
-  console.log(data);
+  console.log("DATA", data);
+  console.log("USER", user);
   return (
-   
     <DashboardShell>
       {data.sites ? <SiteTable sites={data.sites} /> : <EmptyState />}
-      </DashboardShell>
+    </DashboardShell>
   );
 };
 

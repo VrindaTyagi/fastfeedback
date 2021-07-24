@@ -19,7 +19,7 @@ import { createSite } from "@/lib/db";
 import { useAuth } from "@/lib/auth";
 import useSWR, { mutate } from 'swr';
 import fetcher from "@/utils/fetcher";
-// const { data } = useSWR("/api/sites", fetcher); 
+// const { data } = useSWR("/api/sites", fetcher);
 
 const AddSiteModal = ({ children }) => {
   const initialRef = React.useRef();
@@ -41,15 +41,18 @@ const AddSiteModal = ({ children }) => {
       duration: 5000,
       isClosable: true,
     });
-    mutate("/api/sites");
+    mutate(
+      ['/api/sites', auth.user.token],
+      async (data) => {
+        return { sites: [...data.sites, newSite] };
+      },
+      false
+    );
     onClose();
   };
 
   return (
     <>
-      <Button fontWeight="medium" maxW="200px">
-        Add Your First Site
-      </Button>
       <Button
         onClick={onOpen}
         backgroundColor="gray.900"
